@@ -1,6 +1,4 @@
-#ifndef ROOM_H
-#define ROOM_H
-
+#pragma once
 #include <string>
 #include <vector>
 #include <memory>
@@ -11,14 +9,13 @@
 class Room
 {
 public:
-    Room(const std::string& name) : name_(name) {}
+    Room(const std::string& name)
+        : name_(name)
+    {}
 
-    std::string getName() const
-    {
-        return name_;
-    }
+    std::string getName() const { return name_; }
 
-
+    // Composition — the Room OWNS the devices
     void addDevice(std::unique_ptr<Device> device)
     {
         devices_.push_back(std::move(device));
@@ -32,10 +29,7 @@ public:
     void updateDevices()
     {
         for (auto& d : devices_)
-        {
-            if (d)
-                d->update();
-        }
+            d->update();
     }
 
     void printDevices() const
@@ -43,12 +37,9 @@ public:
         std::cout << "Room: " << name_ << "\n";
         for (const auto& d : devices_)
         {
-            if (d)
-            {
-                std::cout << "  - ";
-                d->printInfo();
-                std::cout << "\n";
-            }
+            std::cout << "  - ";
+            d->printInfo();
+            std::cout << "\n";
         }
     }
 
@@ -56,5 +47,3 @@ private:
     std::string name_;
     std::vector<std::unique_ptr<Device>> devices_;
 };
-
-#endif
