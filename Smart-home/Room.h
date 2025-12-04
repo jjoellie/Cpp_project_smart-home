@@ -20,16 +20,16 @@ public:
 
     void addDevice(std::unique_ptr<Device> device)
     {
-        devices_.push_back(std::move(device));
+        device_.push_back(std::move(device));
     }
 
     const std::vector<std::unique_ptr<Device>>& getDevices() const
     {
-        return devices_;
+        return device_;
     }
     void updateDevices()
     {
-        for (auto& d : devices_)
+        for (auto& d : device_)
         {
             if (d)
                 d->update();
@@ -39,7 +39,7 @@ public:
     void printDevices() const
     {
         std::cout << "Room: " << name_ << "\n";
-        for (const auto& d : devices_)
+        for (const auto& d : device_)
         {
             if (d)
             {
@@ -52,7 +52,7 @@ public:
 
 private:
     std::string name_;
-    std::vector<std::unique_ptr<Device>> devices_;
+    std::vector<std::unique_ptr<Device>> device_;
 };
 
 #endif
