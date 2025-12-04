@@ -1,8 +1,6 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <iostream>
-
 #include "Room.h"
 
 class SmartHome
@@ -17,21 +15,7 @@ public:
         rooms_.push_back(std::move(room));
     }
 
-    void updateAll()
-    {
-        for (auto& room : rooms_)
-            room.updateDevices();
-    }
-
-    void printOverview() const
-    {
-        std::cout << "SmartHome of " << ownerName_ << "\n\n";
-        for (const auto& room : rooms_)
-        {
-            room.printDevices();
-            std::cout << "\n";
-        }
-    }
+    std::vector<Room>& getRooms() { return rooms_; }
 
 private:
     std::string ownerName_;

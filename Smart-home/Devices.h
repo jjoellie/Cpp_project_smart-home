@@ -2,6 +2,7 @@
 #include "Device.h"
 #include <algorithm>
 
+
 class Light : public Device
 {
 public:
@@ -9,27 +10,17 @@ public:
         : Device(name, roomName), brightness_(100)
     {}
 
-    void setBrightness(int value)
-    {
-        brightness_ = std::clamp(value, 0, 100);
-    }
-
-    void update() override
-    {
-        std::cout << "[Light update] " << getName() << "\n";
-    }
+    void update() override {}
 
     std::string getTypeName() const override { return "Light"; }
 
-    void printInfo() const override
-    {
-        Device::printInfo();
-        std::cout << " | Brightness: " << brightness_ << "%";
-    }
+
+    int getBrightness() const { return brightness_; }
 
 private:
     int brightness_;
 };
+
 
 
 class Thermostat : public Device
@@ -42,22 +33,20 @@ public:
     void update() override
     {
         if (currentTemp_ < targetTemp_) currentTemp_ += 0.1;
-        if (currentTemp_ > targetTemp_) currentTemp_ -= 0.1;
+        else if (currentTemp_ > targetTemp_) currentTemp_ -= 0.1;
     }
 
     std::string getTypeName() const override { return "Thermostat"; }
 
-    void printInfo() const override
-    {
-        Device::printInfo();
-        std::cout << " | Current: " << currentTemp_
-                  << "°C, Target: " << targetTemp_ << "°C";
-    }
+
+    double getCurrentTemp() const { return currentTemp_; }
+    double getTargetTemp() const { return targetTemp_; }
 
 private:
-    double targetTemp_;
     double currentTemp_;
+    double targetTemp_;
 };
+
 
 
 class MotionSensor : public Device
@@ -67,18 +56,12 @@ public:
         : Device(name, roomName), motionDetected_(false)
     {}
 
-    void detect() { motionDetected_ = true; }
-    void clear() { motionDetected_ = false; }
-
     void update() override {}
 
     std::string getTypeName() const override { return "MotionSensor"; }
 
-    void printInfo() const override
-    {
-        Device::printInfo();
-        std::cout << " | Motion: " << (motionDetected_ ? "YES" : "NO");
-    }
+
+    bool isMotionDetected() const { return motionDetected_; }
 
 private:
     bool motionDetected_;

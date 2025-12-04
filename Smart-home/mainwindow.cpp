@@ -8,11 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Rooms
     Room living("Living Room");
     Room bed("Bedroom");
 
-    // Devices
     living.addDevice(std::make_unique<Light>("Ceiling Light", "Living Room"));
     living.addDevice(std::make_unique<Thermostat>("Main Thermostat", "Living Room", 22.5));
     living.addDevice(std::make_unique<MotionSensor>("Entrance Sensor", "Living Room"));
@@ -22,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     home.addRoom(std::move(living));
     home.addRoom(std::move(bed));
+
+    showHomeStatus();
 }
 
 MainWindow::~MainWindow()
@@ -36,12 +36,33 @@ void MainWindow::showHomeStatus()
     for (const auto& room : home.getRooms())
     {
         ui->textEdit->append("Room: " + QString::fromStdString(room.getName()));
+
         for (const auto& dev : room.getDevices())
         {
-            ui->textEdit->append(
-                QString::fromStdString("  - " + dev->getName()
-                                       + " (" + dev->getTypeName() + ")"));
+            QString info = "  - ";
+            info += QString::fromStdString(dev->getName()) + " (";
+            info += QString::fromStdString(dev->getTypeName()) + ")";
+
+            if (dev->getTypeName() == "Light")
+            {
+                const Light* l = dynamic_cast<const Light*>(dev.get());
+                info += " | Brightness: " + QString::number(l->getBrightness()) + "%";
+            }
+            else if (dev->getTypeName() == "Thermostat")
+            {
+                const Thermostat* t = dynamic_cast<const Thermostat*>(dev.get());
+                info += " | Current: " + QString::number(t->getCurrentTemp()) + "°C";
+                info += " | Target: " + QString::number(t->getTargetTemp()) + "°C";
+            }
+            else if (dev->getTypeName() == "MotionSensor")
+            {
+                const MotionSensor* m = dynamic_cast<const MotionSensor*>(dev.get());
+                info += m->isMotionDetected() ? " | Motion: YES" : " | Motion: NO";
+            }
+
+            ui->textEdit->append(info);
         }
+
         ui->textEdit->append("");
     }
 }
