@@ -1,8 +1,8 @@
 #include <iostream>
 #include <memory>
 
-#include "smarthome.h"
-#include "Device.h"
+#include "SmartHome.h"
+#include "Devices.h"
 
 int main()
 {
@@ -18,8 +18,9 @@ int main()
     bedroom.addDevice(std::make_unique<Light>("Bedside Lamp", "Bedroom"));
     bedroom.addDevice(std::make_unique<Thermostat>("Bedroom Thermostat", "Bedroom", 20.0));
 
-    home.addRoom(livingRoom);
-    home.addRoom(bedroom);
+
+    home.addRoom(std::move(livingRoom));
+    home.addRoom(std::move(bedroom));
 
     std::cout << "=== Initial state ===\n";
     home.printOverview();
@@ -32,3 +33,4 @@ int main()
 
     return 0;
 }
+
