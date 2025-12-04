@@ -1,6 +1,4 @@
-#ifndef SMARTHOME_H
-#define SMARTHOME_H
-
+#pragma once
 #include <vector>
 #include <string>
 #include <iostream>
@@ -12,22 +10,12 @@ class SmartHome
 public:
     SmartHome(const std::string& ownerName)
         : ownerName_(ownerName)
-    {
-    }
+    {}
 
-    void addRoom(const Room& room)
+    // Room toevoegen ZONDER kopiëren → move semantics
+    void addRoom(Room room)
     {
-        rooms_.push_back(room);
-    }
-
-    std::vector<Room>& getRooms()
-    {
-        return rooms_;
-    }
-
-    const std::vector<Room>& getRooms() const
-    {
-        return rooms_;
+        rooms_.push_back(std::move(room));
     }
 
     void updateAll()
@@ -38,7 +26,7 @@ public:
 
     void printOverview() const
     {
-        std::cout << "SmartHome of " << ownerName_ << "\n";
+        std::cout << "SmartHome of " << ownerName_ << "\n\n";
         for (const auto& room : rooms_)
         {
             room.printDevices();
@@ -50,5 +38,3 @@ private:
     std::string ownerName_;
     std::vector<Room> rooms_;
 };
-
-#endif
