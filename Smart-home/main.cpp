@@ -1,8 +1,8 @@
 #include <iostream>
 #include <memory>
 
-#include "SmartHome.h"
-#include "Devices.h"
+#include "smarthome.h"
+#include "Device.h"
 
 int main()
 {
