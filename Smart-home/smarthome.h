@@ -12,7 +12,6 @@ public:
         : ownerName_(ownerName)
     {}
 
-    // Room toevoegen ZONDER kopiëren → move semantics
     void addRoom(Room room)
     {
         rooms_.push_back(std::move(room));

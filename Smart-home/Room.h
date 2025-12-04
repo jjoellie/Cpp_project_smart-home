@@ -15,7 +15,7 @@ public:
 
     std::string getName() const { return name_; }
 
-    // Composition — the Room OWNS the devices
+
     void addDevice(std::unique_ptr<Device> device)
     {
         devices_.push_back(std::move(device));
