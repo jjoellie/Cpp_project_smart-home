@@ -18,7 +18,6 @@ public:
         return name_;
     }
 
-    // Composition: Room BEZIT de devices
     void addDevice(std::unique_ptr<Device> device)
     {
         devices_.push_back(std::move(device));
@@ -28,3 +27,32 @@ public:
     {
         return devices_;
     }
+    void updateDevices()
+    {
+        for (auto& d : devices_)
+        {
+            if (d)
+                d->update();
+        }
+    }
+
+    void printDevices() const
+    {
+        std::cout << "Room: " << name_ << "\n";
+        for (const auto& d : devices_)
+        {
+            if (d)
+            {
+                std::cout << "  - ";
+                d->printInfo();
+                std::cout << "\n";
+            }
+        }
+    }
+
+private:
+    std::string name_;
+    std::vector<std::unique_ptr<Device>> devices_;
+};
+
+#endif
