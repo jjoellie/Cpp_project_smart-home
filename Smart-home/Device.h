@@ -24,8 +24,8 @@ public:
     virtual void printInfo() const
     {
         std::cout << "[" << roomName_ << "] "
-                  << getTypeName() << " \"" << name_
-                  << "\" - " << (poweredOn_ ? "ON" : "OFF");
+                  << getTypeName() << " \"" << name_ << "\" - "
+                  << (poweredOn_ ? "ON" : "OFF");
     }
 
 private:
