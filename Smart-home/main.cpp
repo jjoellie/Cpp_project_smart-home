@@ -23,3 +23,12 @@ int main()
 
     std::cout << "=== Initial state ===\n";
     home.printOverview();
+
+    std::cout << "\n=== Updating all devices ===\n";
+    home.updateAll();
+
+    std::cout << "\n=== After update ===\n";
+    home.printOverview();
+
+    return 0;
+}
