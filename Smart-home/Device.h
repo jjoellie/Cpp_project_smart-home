@@ -1,145 +1,73 @@
-#ifndef DEVICES_H
-#define DEVICES_H
+#ifndef DEVICE_H
+#define DEVICE_H
 
-#include "Device.h"
+#include <string>
+#include <iostream>
 
-
-class Light : public Device
+class Device
 {
 public:
-    Light(const std::string& name, const std::string& roomName)
-        : Device(name, roomName), brightness_(100)
+
+    Device(const std::string& name, const std::string& roomName)
+        : name_(name), roomName_(roomName), poweredOn_(false)
     {
     }
 
-    void setBrightness(int value)
+
+    virtual ~Device() = default;
+
+
+    void turnOn()
     {
-        if (value < 0) value = 0;
-        if (value > 100) value = 100;
-        brightness_ = value;
+        poweredOn_ = true;
     }
 
-    int getBrightness() const
+    void turnOff()
     {
-        return brightness_;
+        poweredOn_ = false;
     }
 
-    void update() override
+    bool isOn() const
     {
-
-        std::cout << "[Light::update] " << getName() << " in "
-                  << getRoomName() << " brightness=" << brightness_ << "%\n";
+        return poweredOn_;
     }
 
-    std::string getTypeName() const override
+    std::string getName() const
     {
-        return "Light";
+        return name_;
     }
 
-    void printInfo() const override
+    std::string getRoomName() const
     {
-        Device::printInfo();
-        std::cout << " | Brightness: " << brightness_ << "%";
+        return roomName_;
+    }
+
+
+    virtual void update() = 0;
+
+
+    virtual void printInfo() const
+    {
+        std::cout << "[" << roomName_ << "] "
+                  << getTypeName() << " \"" << name_ << "\" - "
+                  << (poweredOn_ ? "ON" : "OFF");
+    }
+
+
+    virtual std::string getTypeName() const = 0;
+
+protected:
+
+    void setName(const std::string& newName)
+    {
+        name_ = newName;
     }
 
 private:
-    int brightness_;
-};
 
-
-class Thermostat : public Device
-{
-public:
-    Thermostat(const std::string& name, const std::string& roomName, double targetTemp)
-        : Device(name, roomName), targetTemperature_(targetTemp), currentTemperature_(20.0)
-    {
-    }
-
-    void setTargetTemperature(double t)
-    {
-        targetTemperature_ = t;
-    }
-
-    double getTargetTemperature() const
-    {
-        return targetTemperature_;
-    }
-
-    double getCurrentTemperature() const
-    {
-        return currentTemperature_;
-    }
-
-    void update() override
-    {
-
-        if (currentTemperature_ < targetTemperature_)
-            currentTemperature_ += 0.1;
-        else if (currentTemperature_ > targetTemperature_)
-            currentTemperature_ -= 0.1;
-    }
-
-    std::string getTypeName() const override
-    {
-        return "Thermostat";
-    }
-
-    void printInfo() const override
-    {
-        Device::printInfo();
-        std::cout << " | Current: " << currentTemperature_
-                  << "°C, Target: " << targetTemperature_ << "°C";
-    }
-
-private:
-    double targetTemperature_;
-    double currentTemperature_;
-};
-
-
-class MotionSensor : public Device
-{
-public:
-    MotionSensor(const std::string& name, const std::string& roomName)
-        : Device(name, roomName), motionDetected_(false)
-    {
-    }
-
-    void detectMotion()
-    {
-        motionDetected_ = true;
-    }
-
-    void clearMotion()
-    {
-        motionDetected_ = false;
-    }
-
-    bool isMotionDetected() const
-    {
-        return motionDetected_;
-    }
-
-    void update() override
-    {
-
-        std::cout << "[MotionSensor::update] " << getName()
-                  << " motion=" << (motionDetected_ ? "YES" : "NO") << "\n";
-    }
-
-    std::string getTypeName() const override
-    {
-        return "MotionSensor";
-    }
-
-    void printInfo() const override
-    {
-        Device::printInfo();
-        std::cout << " | Motion: " << (motionDetected_ ? "DETECTED" : "none");
-    }
-
-private:
-    bool motionDetected_;
+    std::string name_;
+    std::string roomName_;
+    bool poweredOn_;
 };
 
 #endif
