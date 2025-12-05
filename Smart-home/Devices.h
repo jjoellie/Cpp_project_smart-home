@@ -15,7 +15,11 @@ public:
     std::string getTypeName() const override { return "Light"; }
 
 
-    int getBrightness() const { return brightness_; }
+    int  getBrightness() const { return brightness_; }
+    void setBrightness(int value)
+    {
+        brightness_ = std::clamp(value, 0, 100);
+    }
 
 private:
     int brightness_;
@@ -27,7 +31,7 @@ class Thermostat : public Device
 {
 public:
     Thermostat(const std::string& name, const std::string& roomName, double targetTemp)
-        : Device(name, roomName), targetTemp_(targetTemp), currentTemp_(20.0)
+        : Device(name, roomName), currentTemp_(20.0), targetTemp_(targetTemp)
     {}
 
     void update() override
@@ -38,9 +42,10 @@ public:
 
     std::string getTypeName() const override { return "Thermostat"; }
 
-
     double getCurrentTemp() const { return currentTemp_; }
-    double getTargetTemp() const { return targetTemp_; }
+    double getTargetTemp() const  { return targetTemp_; }
+
+    void setTargetTemp(double t) { targetTemp_ = t; }
 
 private:
     double currentTemp_;
@@ -56,12 +61,17 @@ public:
         : Device(name, roomName), motionDetected_(false)
     {}
 
-    void update() override {}
+    void update() override
+    {
+        // eventueel auto-clear logica
+    }
 
     std::string getTypeName() const override { return "MotionSensor"; }
 
-
     bool isMotionDetected() const { return motionDetected_; }
+
+    void detect()     { motionDetected_ = true; }
+    void clearMotion(){ motionDetected_ = false; }
 
 private:
     bool motionDetected_;
