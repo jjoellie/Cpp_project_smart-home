@@ -11,20 +11,38 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-
     Room living("Living Room");
     Room bed("Bedroom");
 
+    // -------- DEVICES --------
+
+    // Living room light
     living.addDevice(std::make_unique<Light>("Ceiling Light", "Living Room"));
-    living.addDevice(std::make_unique<Thermostat>("Main Thermostat", "Living Room", 22.5));
+
+    // Living room thermostat (TURN ON FIX)
+    {
+        auto t = std::make_unique<Thermostat>("Main Thermostat", "Living Room", 22.5);
+        t->turnOn(); // IMPORTANT FIX
+        living.addDevice(std::move(t));
+    }
+
+    // Living room motion sensor
     living.addDevice(std::make_unique<MotionSensor>("Entrance Sensor", "Living Room"));
 
+    // Bedroom light
     bed.addDevice(std::make_unique<Light>("Bedside Lamp", "Bedroom"));
-    bed.addDevice(std::make_unique<Thermostat>("Bedroom Thermostat", "Bedroom", 20.0));
+
+    // Bedroom thermostat (TURN ON FIX)
+    {
+        auto t = std::make_unique<Thermostat>("Bedroom Thermostat", "Bedroom", 20.0);
+        t->turnOn(); // IMPORTANT FIX
+        bed.addDevice(std::move(t));
+    }
 
     home.addRoom(std::move(living));
     home.addRoom(std::move(bed));
 
+    // -------- TIMER FOR AUTO-UPDATES --------
     connect(timer, &QTimer::timeout, this, &MainWindow::updateSimulation);
     timer->start(1000);
 
@@ -45,6 +63,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
 void MainWindow::showHomeStatus()
 {
     ui->textEdit->clear();
@@ -61,12 +80,15 @@ void MainWindow::showHomeStatus()
 
             const std::string type = dev->getTypeName();
 
+            // LIGHT
             if (type == "Light")
             {
                 auto* l = dynamic_cast<const Light*>(dev.get());
                 info += l->isOn() ? " | ON" : " | OFF";
                 info += " | Brightness: " + QString::number(l->getBrightness()) + "%";
             }
+
+            // THERMOSTAT
             else if (type == "Thermostat")
             {
                 auto* t = dynamic_cast<const Thermostat*>(dev.get());
@@ -74,6 +96,8 @@ void MainWindow::showHomeStatus()
                 info += " | Current: " + QString::number(t->getCurrentTemp(), 'f', 1) + "°C";
                 info += " | Target: " + QString::number(t->getTargetTemp(), 'f', 1) + "°C";
             }
+
+            // MOTION SENSOR
             else if (type == "MotionSensor")
             {
                 auto* m = dynamic_cast<const MotionSensor*>(dev.get());
@@ -159,6 +183,7 @@ void MainWindow::on_sliderBrightness_valueChanged(int value)
 
     showHomeStatus();
 }
+
 
 void MainWindow::updateSimulation()
 {
