@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <iostream>
 
 #include "Device.h"
 
@@ -15,12 +14,17 @@ public:
 
     std::string getName() const { return name_; }
 
-    void addDevice(std::unique_ptr<Device> device)
+    void addDevice(std::unique_ptr<Device> d)
     {
-        devices_.push_back(std::move(device));
+        devices_.push_back(std::move(d));
     }
 
     const std::vector<std::unique_ptr<Device>>& getDevices() const
+    {
+        return devices_;
+    }
+
+    std::vector<std::unique_ptr<Device>>& getDevices()
     {
         return devices_;
     }
@@ -29,17 +33,6 @@ public:
     {
         for (auto& d : devices_)
             d->update();
-    }
-
-    void printDevices() const
-    {
-        std::cout << "Room: " << name_ << "\n";
-        for (const auto& d : devices_)
-        {
-            std::cout << "  - ";
-            d->printInfo();
-            std::cout << "\n";
-        }
     }
 
 private:
