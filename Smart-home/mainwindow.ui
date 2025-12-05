@@ -27,7 +27,7 @@
    <widget class="QPushButton" name="btnShow">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>180</x>
       <y>280</y>
       <width>91</width>
       <height>18</height>
@@ -47,7 +47,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>On lights</string>
+     <string>Lights on</string>
     </property>
    </widget>
    <widget class="QSlider" name="sliderBrightness">
@@ -110,6 +110,19 @@
     </property>
     <property name="text">
      <string>Clear Motion</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnLightsOff">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>30</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lights off</string>
     </property>
    </widget>
   </widget>
