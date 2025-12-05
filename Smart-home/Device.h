@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <iostream>
 
 class Device
 {
@@ -11,22 +10,16 @@ public:
 
     virtual ~Device() = default;
 
-    void turnOn() { poweredOn_ = true; }
+    void turnOn()  { poweredOn_ = true; }
     void turnOff() { poweredOn_ = false; }
     bool isOn() const { return poweredOn_; }
 
-    std::string getName() const { return name_; }
+    std::string getName() const     { return name_; }
     std::string getRoomName() const { return roomName_; }
+
 
     virtual void update() = 0;
     virtual std::string getTypeName() const = 0;
-
-    virtual void printInfo() const
-    {
-        std::cout << "[" << roomName_ << "] "
-                  << getTypeName() << " \"" << name_ << "\" - "
-                  << (poweredOn_ ? "ON" : "OFF");
-    }
 
 private:
     std::string name_;
