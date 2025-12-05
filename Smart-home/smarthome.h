@@ -17,7 +17,7 @@ public:
         rooms_.push_back(std::move(room));
     }
 
-    std::vector<Room>&       getRooms()       { return rooms_; }
+    std::vector<Room>& getRooms() { return rooms_; }
     const std::vector<Room>& getRooms() const { return rooms_; }
 
     void updateAll()

@@ -20,11 +20,13 @@ public:
 private slots:
     void on_btnShow_clicked();
     void on_btnLightsOn_clicked();
+    void on_btnLightsOff_clicked();
     void on_btnSetTemp_clicked();
     void on_btnSimulateMotion_clicked();
     void on_btnClearMotion_clicked();
     void on_sliderBrightness_valueChanged(int value);
-    void updateSimulation();     // QTimer slot
+
+    void updateSimulation();
 
 private:
     Ui::MainWindow *ui;

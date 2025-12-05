@@ -17,7 +17,6 @@ public:
     std::string getName() const     { return name_; }
     std::string getRoomName() const { return roomName_; }
 
-
     virtual void update() = 0;
     virtual std::string getTypeName() const = 0;
 
