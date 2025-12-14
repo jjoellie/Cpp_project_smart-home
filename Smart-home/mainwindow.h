@@ -30,7 +30,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    SmartHome home;
+    smarthome::SmartHome home;
     QTimer* timer;
 
     void showHomeStatus();
