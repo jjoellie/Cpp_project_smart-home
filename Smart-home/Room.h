@@ -1,53 +1,55 @@
 #pragma once
-#include "Device.h"
-#include <memory>
+
 #include <string>
 #include <vector>
+#include <memory>
 
-namespace smarthome {
+#include "Devices.h"
 
+namespace smarthome
+{
 class Room
 {
 public:
-    Room() : Room("Unnamed Room") {}
+    Room() : name_("Unknown") {}
+    explicit Room(const std::string& name) : name_(name) {}
 
-    explicit Room(const std::string& name)
-        : name_(name), visited_(false)
-    {}
+    Room(const Room&) = delete;
+    Room& operator=(const Room&) = delete;
 
-    Room(const Room& other)
-        : name_(other.name_), visited_(other.visited_)
-    {
-        devices_.reserve(other.devices_.size());
-        for (const auto& d : other.devices_)
-            devices_.push_back(d ? d->clone() : nullptr);
-    }
+    Room(Room&&) = default;
+    Room& operator=(Room&&) = default;
 
     ~Room() = default;
 
-    const std::string& name() const { return name_; }
-    bool visited() const { return visited_; }
-
-    void setVisited(bool v = true) { visited_ = v; }
-
-    void addDevice(std::unique_ptr<Device> d)
+    const std::string& getName() const
     {
-        devices_.push_back(std::move(d));
+        return name_;
     }
 
-    const std::vector<std::unique_ptr<Device>>& devices() const { return devices_; }
-    std::vector<std::unique_ptr<Device>>& devices() { return devices_; }
+    std::vector<std::unique_ptr<Device>>& getDevices()
+    {
+        return devices_;
+    }
 
-    void updateDevices(double dt = 1.0)
+    const std::vector<std::unique_ptr<Device>>& getDevices() const
+    {
+        return devices_;
+    }
+
+    void addDevice(std::unique_ptr<Device> device)
+    {
+        devices_.push_back(std::move(device));
+    }
+
+    void updateDevices()
     {
         for (auto& d : devices_)
-            if (d) d->update(dt);
+            d->update();
     }
 
 private:
     std::string name_;
     std::vector<std::unique_ptr<Device>> devices_;
-    bool visited_;
 };
-
 }

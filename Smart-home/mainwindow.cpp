@@ -16,25 +16,30 @@ MainWindow::MainWindow(QWidget *parent)
 
     // -------- DEVICES --------
 
-    // Living room light
-    living.addDevice(std::make_unique<smarthome::Light>("Ceiling Light", "Living Room"));
+    living.addDevice(
+        std::make_unique<smarthome::Light>(1, "Ceiling Light", "Living Room", 100)
+        );
 
-    // Living room thermostat
     {
-        auto t = std::make_unique<smarthome::Thermostat>("Main Thermostat", "Living Room", 22.5);
+        auto t = std::make_unique<smarthome::Thermostat>(
+            2, "Main Thermostat", "Living Room", 22.5
+            );
         t->turnOn();
         living.addDevice(std::move(t));
     }
 
-    // Living room motion sensor
-    living.addDevice(std::make_unique<smarthome::MotionSensor>("Entrance Sensor", "Living Room"));
+    living.addDevice(
+        std::make_unique<smarthome::MotionSensor>(3, "Entrance Sensor", "Living Room")
+        );
 
-    // Bedroom light
-    bed.addDevice(std::make_unique<smarthome::Light>("Bedside Lamp", "Bedroom"));
+    bed.addDevice(
+        std::make_unique<smarthome::Light>(4, "Bedside Lamp", "Bedroom", 100)
+        );
 
-    // Bedroom thermostat
     {
-        auto t = std::make_unique<smarthome::Thermostat>("Bedroom Thermostat", "Bedroom", 20.0);
+        auto t = std::make_unique<smarthome::Thermostat>(
+            5, "Bedroom Thermostat", "Bedroom", 20.0
+            );
         t->turnOn();
         bed.addDevice(std::move(t));
     }
@@ -42,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent)
     home.addRoom(std::move(living));
     home.addRoom(std::move(bed));
 
-    // -------- TIMER --------
     connect(timer, &QTimer::timeout, this, &MainWindow::updateSimulation);
     timer->start(1000);
 
@@ -65,7 +69,7 @@ void MainWindow::showHomeStatus()
 {
     ui->textEdit->clear();
 
-    for (const auto& room : home.getRooms())
+    for (const auto& room : home.rooms())
     {
         ui->textEdit->append("Room: " + QString::fromStdString(room.getName()));
 
@@ -75,22 +79,20 @@ void MainWindow::showHomeStatus()
             info += QString::fromStdString(dev->getName()) + " (";
             info += QString::fromStdString(dev->getTypeName()) + ")";
 
-            const std::string type = dev->getTypeName();
-
-            if (type == "Light")
+            if (dev->getTypeName() == "Light")
             {
                 auto* l = dynamic_cast<const smarthome::Light*>(dev.get());
                 info += l->isOn() ? " | ON" : " | OFF";
                 info += " | Brightness: " + QString::number(l->getBrightness()) + "%";
             }
-            else if (type == "Thermostat")
+            else if (dev->getTypeName() == "Thermostat")
             {
                 auto* t = dynamic_cast<const smarthome::Thermostat*>(dev.get());
                 info += t->isOn() ? " | ON" : " | OFF";
                 info += " | Current: " + QString::number(t->getCurrentTemp(), 'f', 1) + "°C";
                 info += " | Target: " + QString::number(t->getTargetTemp(), 'f', 1) + "°C";
             }
-            else if (type == "MotionSensor")
+            else if (dev->getTypeName() == "MotionSensor")
             {
                 auto* m = dynamic_cast<const smarthome::MotionSensor*>(dev.get());
                 info += m->isOn() ? " | ON" : " | OFF";
@@ -111,7 +113,7 @@ void MainWindow::on_btnShow_clicked()
 
 void MainWindow::on_btnLightsOn_clicked()
 {
-    for (auto& room : home.getRooms())
+    for (auto& room : home.rooms())
         for (auto& dev : room.getDevices())
             if (dev->getTypeName() == "Light")
                 dev->turnOn();
@@ -121,7 +123,7 @@ void MainWindow::on_btnLightsOn_clicked()
 
 void MainWindow::on_btnLightsOff_clicked()
 {
-    for (auto& room : home.getRooms())
+    for (auto& room : home.rooms())
         for (auto& dev : room.getDevices())
             if (dev->getTypeName() == "Light")
             {
@@ -137,7 +139,7 @@ void MainWindow::on_btnSetTemp_clicked()
 {
     double newTemp = ui->spinTargetTemp->value();
 
-    for (auto& room : home.getRooms())
+    for (auto& room : home.rooms())
         for (auto& dev : room.getDevices())
             if (dev->getTypeName() == "Thermostat")
                 dynamic_cast<smarthome::Thermostat*>(dev.get())->setTargetTemp(newTemp);
@@ -147,7 +149,7 @@ void MainWindow::on_btnSetTemp_clicked()
 
 void MainWindow::on_btnSimulateMotion_clicked()
 {
-    for (auto& room : home.getRooms())
+    for (auto& room : home.rooms())
         for (auto& dev : room.getDevices())
             if (dev->getTypeName() == "MotionSensor")
                 dynamic_cast<smarthome::MotionSensor*>(dev.get())->detect();
@@ -157,7 +159,7 @@ void MainWindow::on_btnSimulateMotion_clicked()
 
 void MainWindow::on_btnClearMotion_clicked()
 {
-    for (auto& room : home.getRooms())
+    for (auto& room : home.rooms())
         for (auto& dev : room.getDevices())
             if (dev->getTypeName() == "MotionSensor")
                 dynamic_cast<smarthome::MotionSensor*>(dev.get())->clearMotion();
@@ -167,7 +169,7 @@ void MainWindow::on_btnClearMotion_clicked()
 
 void MainWindow::on_sliderBrightness_valueChanged(int value)
 {
-    for (auto& room : home.getRooms())
+    for (auto& room : home.rooms())
         for (auto& dev : room.getDevices())
             if (dev->getTypeName() == "Light")
                 dynamic_cast<smarthome::Light*>(dev.get())->setBrightness(value);
