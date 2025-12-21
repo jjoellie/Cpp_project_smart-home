@@ -16,7 +16,7 @@ en bewegingssensoren die bediend kunnen worden via een GUI.
 ### Vereisten
 - Qt 5.15+ of Qt 6
 - Qt Creator
-- C++17 compiler
+- C++ compiler
 
 ### Build-instructies
 1. Open Qt Creator
