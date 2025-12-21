@@ -39,7 +39,6 @@ public:
     {
         return rooms_;
     }
-    // ==================================================
 
     // Vraag 18: polymorphism usage
     void updateAll()
@@ -53,4 +52,4 @@ private:
     std::vector<Room> rooms_;   // Vraag 36: container class
 };
 
-} // namespace smarthome
+}

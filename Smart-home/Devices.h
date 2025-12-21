@@ -158,4 +158,4 @@ private:
     bool motionDetected_;
 };
 
-} // namespace smarthome
+}
