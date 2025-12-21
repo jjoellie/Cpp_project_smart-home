@@ -1,19 +1,18 @@
 #pragma once
-#include <vector>
-#include <string>
 
+#include <vector>
+#include <fstream>
+#include <stdexcept>
 #include "Room.h"
-#include "Utils.h"
 
 namespace smarthome
 {
 class SmartHome
 {
 public:
-    SmartHome() : ownerName_("Unknown") {}
-    explicit SmartHome(const std::string& owner) : ownerName_(owner) {}
+    SmartHome(const std::string& owner) : owner_(owner) {}
 
-    void addRoom(Room room)
+    void addRoom(Room&& room)
     {
         rooms_.push_back(std::move(room));
     }
@@ -23,12 +22,22 @@ public:
 
     void updateAll()
     {
-        for (auto& room : rooms_)
-            room.updateDevices();
+        for (auto& r : rooms_)
+            r.updateDevices();
+    }
+
+    // Vraag 38 & 39: file I/O + exception handling
+    void saveToFile(const std::string& path)
+    {
+        std::ofstream out(path);
+        if (!out)
+            throw std::runtime_error("Cannot open file");
+
+        out << "SmartHome owner: " << owner_ << "\n";
     }
 
 private:
-    std::string ownerName_;
+    std::string owner_;
     std::vector<Room> rooms_;
 };
 }
