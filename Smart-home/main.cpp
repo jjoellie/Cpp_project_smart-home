@@ -1,3 +1,5 @@
+// Vraag 2: clean main (no logic in main)
+
 #include <QApplication>
 #include "mainwindow.h"
 
